@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PNCD - Página 1</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    .pdf-page {
+      position: relative;
+      width: 1056px; /* largura da imagem em px (aproximadamente para 150dpi A4) */
+      height: 1488px; /* altura da imagem */
+      background: url('pncd_pages/page1.png') no-repeat;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+    }
+    .input-field {
+      position: absolute;
+      width: 200px;
+      padding: 2px;
+      font-size: 14px;
+    }
+    /* Exemplo de campo posicionado */
+    #nome {
+      top: 200px;
+      left: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="pdf-page">
+    <input type="text" id="nome" class="input-field" placeholder="Nome">
+  </div>
+</body>
+</html>

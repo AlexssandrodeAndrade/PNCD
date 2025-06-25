@@ -2,88 +2,168 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <title>Formulário RT</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
-      crossorigin="anonymous"
-    />
-    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-    <style>
-      fieldset {
-        border: 1px solid black;
-        padding: 1.5rem 1rem 1rem 1rem;
-        border-radius: 6px;
-        position: relative;
-        margin-bottom: 20px;
-      }
-
-      fieldset legend {
-        font-size: 1rem;
-        font-weight: bold;
-        padding: 0 10px;
-        position: absolute;
-        top: -0.8rem;
-        left: 1rem;
-        background-color: greenyellow;
-        display: inline-block; /* ← ESSENCIAL */
-        width: auto; /* ← evita estourar a borda */
-        z-index: 1;
-      }
-    </style>
+    <title>Formulário PNCD</title>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <script src="bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="pdf-lib/pdf-lib.min.js"></script>
+    <link href="pncd.css" rel="stylesheet" />
+    <script src="pncd.js"></script>
   </head>
   <body>
     <div class="container mb-3">
-      <h2 class="text-center">Formulário RT com PDF local</h2>
+      <h2 class="text-center">Formulário PNCD com PDF local</h2>
 
       <div class="row m-2 p-2">
         <div class="col-6">
           <div class="form-floating">
-            <input
-              class="form-control"
-              type="file"
-              id="pdfFile"
-              placeholder="PDF Modelo:"
-            />
+            <input class="form-control" type="file" id="pdfFile" placeholder="PDF Modelo:" />
             <label for="pdfFile">PDF Modelo:</label>
           </div>
         </div>
         <div class="col-6">
-          <button class="btn btn-secondary" onclick="gerarPDF()">
-            Gerar PDF Preenchido
-          </button>
+          <button class="btn btn-secondary" onclick="gerarPDF()">Gerar PDF Preenchido</button>
         </div>
       </div>
 
       <fieldset id="fset1">
-        <legend>
-          Instituição Contratante (Inserir neste campo os dados da instituição
-          com quem o profissional possui contrato)
-        </legend>
+        <legend></legend>
+
         <div class="row mb-1">
-          <div class="col-8">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="razaoSocial"
-                class="form-control"
-                placeholder="Razão Social:"
-                value="MUNICIPIO DE JOSE BOITEUX"
-              />
-              <label for="razaoSocial">Razão Social:</label>
-            </div>
-          </div>
           <div class="col-4">
             <div class="form-floating">
               <input
                 type="text"
-                id="cnpj"
+                id="cidade"
+                name="cidade"
                 class="form-control"
-                placeholder="CNPJ:"
-                value="79.372.553/0001-25"
-              />
-              <label for="cnpj">CNPJ:</label>
+                placeholder="Municipio:"
+                value="JOSE BOITEUX" />
+              <label>Municipio:</label>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-floating">
+              <input
+                type="text"
+                id="localidade"
+                name="localidade"
+                class="form-control"
+                placeholder="Código e nome da localidade:"
+                value="CENTRO" />
+              <label>Código e nome da localidade:</label>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-floating">
+              <input
+                type="text"
+                id="categ_local"
+                name="categ_local"
+                class="form-control"
+                placeholder="Categ. Local:"
+                value="UBR" />
+              <label>Categ. Local:</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-1">
+          <div class="col-4">
+            <div class="form-floating">
+              <input type="text" id="zona" name="zona" class="form-control" placeholder="Zona:" value="URB" />
+              <label>Zona:</label>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-floating">
+              <input
+                type="text"
+                id="semana_epidemiologica"
+                name="semana_epidemiologica"
+                class="form-control"
+                placeholder="Semana Epidemiologica:"
+                value="1" />
+              <label>Semana Epidemiologica:</label>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-floating">
+              <select id="tipo_armadilha" class="form-select">
+                <option value="" disabled selected>Selecione</option>
+                <option value="1">1 - Ovitramapa</option>
+                <option value="2" selected>2 - Larvitramapa</option>
+              </select>
+              <label>Tipo de Armadilha:</label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset id="fset2">
+        <legend></legend>
+
+        <div class="row mb-1">
+          <div class="col-12">
+            <div class="form-floating">
+              <input type="text" id="endereco" class="form-control" placeholder="Endereço:" value="AV 26 DE ABRIL" />
+              <label for="endereco">Endereço:</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-1">
+          <div class="col-3">
+            <div class="form-floating">
+              <input
+                type="text"
+                id="numero_quadra"
+                name="numero_quadra"
+                class="form-control"
+                placeholder="Numero. Quadra:"
+                value="1" />
+              <label>Numero. Quadra:</label>
+            </div>
+          </div>
+
+          <div class="col-3">
+            <div class="form-floating">
+              <select id="tipo_imovel" name="tipo_imovel" class="form-select">
+                <option value="" disabled>Selecione</option>
+                <option value="C">C - Comércio</option>
+                <option value="O" selected>O - Outros</option>
+                <option value="R">R - Residência</option>
+              </select>
+              <label for="tipo_imovel">Tipo de Imóvel:</label>
+            </div>
+          </div>
+
+          <div class="col-3">
+            <div class="form-floating">
+              <input
+                type="text"
+                id="numero_imovel"
+                name="numero_imovel"
+                class="form-control"
+                placeholder="Numero. Imóvel:"
+                value="2757" />
+              <label>Numero. Imóvel:</label>
+            </div>
+          </div>
+
+          <div class="col-3">
+            <div class="form-floating">
+              <input
+                type="text"
+                id="identificacao_armadilha"
+                name="identificacao_armadilha"
+                class="form-control"
+                placeholder="Numero. Imóvel:"
+                value="25" />
+              <label>Identificação Armadilha:</label>
             </div>
           </div>
         </div>
@@ -93,94 +173,12 @@
             <div class="form-floating">
               <input
                 type="text"
-                id="nomeFantasia"
+                id="localizacao"
+                name="localizacao"
                 class="form-control"
-                placeholder="Nome Fantasia:"
-                value="JOSE BOITEUX PREF GABINETE DO PREFEITO"
-              />
-              <label for="nomeFantasia">Nome Fantasia:</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mb-1">
-          <div class="col-4">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="endereco"
-                class="form-control"
-                placeholder="Endereço:"
-                value="AV 26 DE ABRIL, Nº 655"
-              />
-              <label for="endereco">Endereço:</label>
-            </div>
-          </div>
-
-          <div class="col-4">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="cep"
-                class="form-control"
-                placeholder="CEP:"
-                value="89.145-000"
-              />
-              <label>CEP:</label>
-            </div>
-          </div>
-
-          <div class="col-4">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="bairro"
-                class="form-control"
-                placeholder="Bairro:"
-                value="CENTRO"
-              />
-              <label>Bairro:</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mb-1">
-          <div class="col-4">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="cidade"
-                class="form-control"
-                placeholder="Cidade:"
-                value="JOSE BOITEUX"
-              />
-              <label>Cidade:</label>
-            </div>
-          </div>
-
-          <div class="col-4">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="telelefone"
-                class="form-control"
-                placeholder="Telefone:"
-                value="(47) 3352-7111"
-              />
-              <label for="tel">Telefone:</label>
-            </div>
-          </div>
-
-          <div class="col-4">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="email"
-                class="form-control"
-                placeholder="E-mail:"
-                value="CONTABILIDADE@PMJB.SC.GOV.BR"
-              />
-              <label>E-mail:</label>
+                placeholder="Localização:"
+                value="Associação 13 de Maio" />
+              <label for="localizacao">Localização:</label>
             </div>
           </div>
         </div>
@@ -188,297 +186,60 @@
         <div class="row mb-1">
           <div class="col-6">
             <div class="form-floating">
+              <input type="date" id="data" name="data" class="form-control" placeholder="Data:" value="2025-06-25" />
+              <label>Data:</label>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="form-floating">
+              <input type="time" id="hora" name="hora" class="form-control" placeholder="Hora:" value="08:00" />
+              <label>Hora:</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-1">
+          <div class="col-4">
+            <div class="form-floating">
+              <input
+                type="number"
+                id="tubito_chave"
+                name="tubito_chave"
+                class="form-control"
+                placeholder="Tubito Chave:"
+                value="0652" />
+              <label>Tubito Chave:</label>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-floating">
               <input
                 type="text"
-                id="ramo"
+                id="tubito_numero"
+                name="tubito_numero"
                 class="form-control"
-                placeholder="Ramo de atividade:"
-                value="84.11-6-00 - Administração pública em geral"
-              />
-              <label>Ramo de atividade:</label>
+                placeholder="Tubito Chave:"
+                value="145" />
+              <label>Tubito Numero:</label>
             </div>
           </div>
 
-          <div class="col-6 mb-3">
-            <label class="form-label d-block mb-1">Natureza:</label>
-
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="natureza"
-                id="natPublica"
-                value="Pública"
-                checked
-              />
-              <label class="form-check-label" for="natPublica">Pública</label>
-            </div>
-
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="natureza"
-                id="natPrivada"
-                value="Privada"
-              />
-              <label class="form-check-label" for="natPrivada">Privada</label>
-            </div>
-
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="natureza"
-                id="natFilantropica"
-                value="Filantrópica"
-              />
-              <label class="form-check-label" for="natFilantropica"
-                >Filantrópica</label
-              >
-            </div>
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset id="2">
-        <legend>
-          Instituição de Atuação (Inserir neste campo os dados do local de
-          atuação. Caso seja a mesma instituição, repetir os dados)
-        </legend>
-
-        <h3>Instituição de Atuação</h3>
-        <div class="row mb-1">
-          <div class="col-8">
+          <div class="col-4">
             <div class="form-floating">
-              <label>Razão Social:</label>
-              <input type="text" name="razao_social" />
+              <select id="ocorrencia" name="ocorrencia" class="form-select">
+                <option value="" disabled selected>Selecione</option>
+                <option value="1">1 - Casa Fechada</option>
+                <option value="2">2 - Intervalo entre a última inspeção e atual maior que 7 dias</option>
+                <option value="3">3 - Arm ou palheta desaparecida / quebrada / removida</option>
+                <option value="4">4 - Armadilha seca</option>
+              </select>
+              <label for="ocorrencia">Ocorrência:</label>
             </div>
           </div>
         </div>
-        <label>Nome Fantasia:</label>
-        <input type="text" name="nome_fantasia" />
-        <label>CNPJ:</label>
-        <input type="text" name="cnpj" /><br />
-
-        <label>Endereço:</label>
-        <input type="text" name="endereco" />
-        <label>Número:</label>
-        <input type="text" name="numero" />
-        <label>Bairro:</label>
-        <input type="text" name="bairro" />
-        <label>CEP:</label>
-        <input type="text" name="cep" /><br />
-
-        <label>Cidade:</label>
-        <input type="text" name="cidade" />
-        <label>Tel:</label>
-        <input type="text" name="telefone" /><br />
-
-        <label>E-mail:</label>
-        <input type="email" name="email1" />
-        <label>E-mail 2:</label>
-        <input type="email" name="email2" /><br />
-
-        <label>Horário de funcionamento:</label>
-        <input type="text" name="horario_funcionamento" /><br />
-
-        <label>Ramo de atividade:</label>
-        <input type="text" name="ramo_atividade" /><br />
-
-        <label>Natureza:</label><br />
-        <input type="checkbox" name="natureza" value="publica" /> Pública
-        <input type="checkbox" name="natureza" value="privada" /> Privada
-        <input type="checkbox" name="natureza" value="filantropica" />
-        Filantrópica<br /><br />
-
-        <label>Tipo de RT:</label><br />
-        <input type="checkbox" name="rt_tipo" value="marcar_com_um_x" /> MARCAR
-        COM UM X<br />
-        <input type="checkbox" name="rt_tipo" value="rt_pgrss" /> RT PGRSS<br />
-        <input type="checkbox" name="rt_tipo" value="rt_auditoria" /> RT
-        Auditoria/Consultoria<br />
-        <input type="checkbox" name="rt_tipo" value="rt_ensino" /> RT
-        Ensino/Docente<br />
-        <input type="checkbox" name="rt_tipo" value="rt_assistencial" /> RT
-        Assistencial<br />
-        <input type="checkbox" name="rt_tipo" value="rt_equipamentos" /> RT
-        Equipamentos/Materiais/Insumos Médicos-Hospitalares<br />
-      </fieldset>
-
-      <fieldset id="3">
-        <legend>Responsável Técnico</legend>
-      </fieldset>
-
-      <fieldset id="5">
-        <legend>Outros vínculos profissionais</legend>
-      </fieldset>
-
-      <fieldset id="5">
-        <legend>
-          Representante legal da Empresa/Instituição ou Responsável pelo local
-          de atuação do RT
-        </legend>
       </fieldset>
     </div>
-    <script>
-      async function gerarPDF() {
-        const fileInput = document.getElementById("pdfFile");
-        if (!fileInput.files.length) {
-          alert("Selecione o arquivo RT.pdf primeiro.");
-          return;
-        }
-
-        const file = fileInput.files[0];
-        const arrayBuffer = await file.arrayBuffer();
-
-        const { PDFDocument, rgb, StandardFonts } = PDFLib;
-        const pdfDoc = await PDFDocument.load(arrayBuffer);
-        const pages = pdfDoc.getPages();
-        const firstPage = pages[0];
-        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-        const corFonte = rgb(1, 0, 0); // vermelho de teste
-        const fontSize = 10;
-
-        // Obter valores
-        const get = (id) => document.getElementById(id)?.value || "";
-        const fset1_razao = get("razaoSocial");
-        const fset1_cnpj = get("cnpj");
-        const fset1_nomeFantasia = get("nomeFantasia");
-        const fset1_endereco = get("endereco");
-        const fset1_cep = get("cep");
-        const fset1_cidade = get("cidade");
-        const fset1_telelefo = get("telefone");
-        const fset1_ramo = get("ramo");
-        const fset1_bairro = get("bairro");
-        const fset1_email = get("email");
-
-        // Natureza
-        let posX = 0;
-        let posY = 0;
-        const fset1_natureza = document.querySelector(
-          'input[name="natureza"]:checked'
-        )?.value;
-
-        switch (fset1_natureza) {
-          case "Pública":
-            posX = 400;
-            posY = 626;
-            break;
-          case "Privada":
-            posX = 483;
-            posY = 626;
-            break;
-          case "Filantrópica":
-            posX = 563;
-            posY = 626;
-            break;
-        }
-        // ⚠️ Posições estimadas (x, y em pontos PDF - ajustável)
-        firstPage.drawText(fset1_razao, {
-          x: 70,
-          y: 680,
-          size: fontSize,
-          font,
-          color: corFonte,
-        });
-        firstPage.drawText(fset1_cnpj, {
-          x: 404,
-          y: 680,
-          size: fontSize,
-          font,
-          color: corFonte,
-        });
-
-        firstPage.drawText(fset1_nomeFantasia, {
-          x: 80,
-          y: 668,
-          size: fontSize,
-          font,
-          color: corFonte,
-        });
-
-        firstPage.drawText(fset1_endereco, {
-          x: 60,
-          y: 655,
-          size: fontSize,
-          font,
-          color: corFonte,
-        });
-        firstPage.drawText(fset1_bairro, {
-          x: 345,
-          y: 655,
-          size: fontSize,
-          font,
-          color: corFonte,
-        });
-        firstPage.drawText(fset1_cep, {
-          x: 485,
-          y: 655,
-          size: fontSize,
-          font,
-          color: corFonte,
-        });
-
-        firstPage.drawText(fset1_cidade, {
-          x: 50,
-          y: 642,
-          size: fontSize,
-          font,
-          color: corFonte,
-        });
-        firstPage.drawText(fset1_telelefo, {
-          x: 240,
-          y: 642,
-          size: fontSize,
-          font,
-          color: corFonte,
-        });
-        firstPage.drawText(fset1_email, {
-          x: 355,
-          y: 642,
-          size: fontSize,
-          font,
-          color: corFonte,
-        });
-
-        firstPage.drawText(fset1_ramo, {
-          x: 90,
-          y: 630,
-          size: fontSize,
-          font,
-          color: corFonte,
-        });
-
-        if (posX && posY) {
-          firstPage.drawText("X", {
-            x: posX,
-            y: posY,
-            size: fontSize,
-            font,
-            color: corFonte,
-          });
-        }
-
-        // Gerar PDF
-        //   const pdfBytes = await pdfDoc.save();
-        //   const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-        //   const link = document.createElement('a');
-        //   link.href = URL.createObjectURL(blob);
-        //   link.download = 'formulario_preenchido.pdf';
-        //   link.click();
-
-        const pdfBytes = await pdfDoc.save();
-        const blob = new Blob([pdfBytes], { type: "application/pdf" });
-        const url = URL.createObjectURL(blob);
-        window.open(url, "_blank"); // ✅ Abre em nova aba
-      }
-    </script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
-      crossorigin="anonymous"
-    ></script>
   </body>
 </html>

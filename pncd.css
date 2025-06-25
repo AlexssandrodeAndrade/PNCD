@@ -1,0 +1,20 @@
+ fieldset {
+        border: 1px solid black;
+        padding: 1.5rem 1rem 1rem 1rem;
+        border-radius: 6px;
+        position: relative;
+        margin-bottom: 20px;
+      }
+
+      fieldset legend {
+        font-size: 1rem;
+        font-weight: bold;
+        padding: 0 10px;
+        position: absolute;
+        top: -0.8rem;
+        left: 1rem;
+        background-color: greenyellow;
+        display: inline-block; /* ← ESSENCIAL */
+        width: auto; /* ← evita estourar a borda */
+        z-index: 1;
+      }
