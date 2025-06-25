@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Localizador de posição no PDF</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    #pdf-container {
+      position: relative;
+      display: inline-block;
+      margin-top: 60px;
+    }
+
+    #pdf-canvas {
+      border: 1px solid #000;
+    }
+
+    #click-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: crosshair;
+      width: 100%;
+      height: 100%;
+    }
+
+    #posicao {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: white;
+      padding: 8px 12px;
+      border: 1px solid black;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+      font-family: monospace;
+      font-size: 14px;
+      z-index: 999;
+    }
+
+    #cabecalho {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: white;
+      padding: 5px 10px;
+      z-index: 999;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div id="cabecalho">
+    <label><strong>Escolha o PDF:</strong></label>
+    <input type="file" id="pdfInput" accept=".pdf">
+  </div>
+
+  <div id="posicao">Posição: --</div>
+
+  <div id="pdf-container">
+    <canvas id="pdf-canvas"></canvas>
+    <div id="click-layer"></div>
+  </div>
+
+  <script>
+    const input = document.getElementById('pdfInput');
+    const canvas = document.getElementById('pdf-canvas');
+    const ctx = canvas.getContext('2d');
+    const layer = document.getElementById('click-layer');
+    const pos = document.getElementById('posicao');
+
+    let scale = 1;
+    let pageHeight = 0;
+
+    input.addEventListener('change', async function () {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function () {
+        const typedarray = new Uint8Array(reader.result);
+
+        const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+        const page = await pdf.getPage(1);
+
+        const viewport = page.getViewport({ scale: 1.5 });
+        scale = viewport.scale;
+        pageHeight = viewport.height;
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({
+          canvasContext: ctx,
+          viewport: viewport
+        }).promise;
+
+        layer.style.width = canvas.width + 'px';
+        layer.style.height = canvas.height + 'px';
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    layer.addEventListener('click', function (e) {
+      const rect = canvas.getBoundingClientRect();
+      const canvasX = e.clientX - rect.left;
+      const canvasY = e.clientY - rect.top;
+
+      const pdfX = Math.round(canvasX / scale);
+      const pdfY = Math.round((canvas.height - canvasY) / scale);
+
+      pos.innerHTML += `x: ${pdfX}, y: ${pdfY}<br>`;
+    });
+  </script>
+</body>
+</html>
