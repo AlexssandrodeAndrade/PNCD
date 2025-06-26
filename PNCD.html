@@ -6,8 +6,10 @@
     <link href="bootstrap/bootstrap.min.css" rel="stylesheet" />
     <script src="bootstrap/bootstrap.bundle.min.js"></script>
     <script src="pdf-lib/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <link href="pncd.css" rel="stylesheet" />
-    <script src="pncd.js"></script>
+    <script src="pncd_carregar_csv.js"></script>
+    <script src="pncd_gera_pdf.js"></script>
   </head>
   <body>
     <div class="container mb-3">
@@ -16,12 +18,27 @@
       <div class="row m-2 p-2">
         <div class="col-6">
           <div class="form-floating">
-            <input class="form-control" type="file" id="pdfFile" placeholder="PDF Modelo:" />
-            <label for="pdfFile">PDF Modelo:</label>
+            <input type="file" id="csvFile" class="form-control" placeholder="CSV Modelo:" accept=".csv" />
+            <label for="csvFile">CSV Modelo:</label>
           </div>
         </div>
         <div class="col-6">
-          <button class="btn btn-secondary" onclick="gerarPDF()">Gerar PDF Preenchido</button>
+          <button class="btn btn-secondary" onclick="carregar_HTML()">Gerar HTML Preenchido</button>
+        </div>
+      </div>
+
+      <div class="row m-2 p-2">
+        <div class="col-6">
+          <div class="form-floating">
+            <input type="file" id="pdfFile" class="form-control" placeholder="PDF Modelo:" accept=".pdf" />
+            <label for="pdfFile">PDF Modelo:</label>
+          </div>
+        </div>
+        <!-- <div class="col-3">
+          <button class="btn btn-secondary" onclick="gerarPDFComRegistro(0)">Gerar PDF Preenchido</button>
+        </div> -->
+        <div class="col-6">
+          <button class="btn btn-success" onclick="gerar_PDF()">Gerar PDF Preenchido</button>
         </div>
       </div>
 
@@ -103,143 +120,7 @@
         </div>
       </fieldset>
 
-      <fieldset id="fset2">
-        <legend></legend>
-
-        <div class="row mb-1">
-          <div class="col-12">
-            <div class="form-floating">
-              <input type="text" id="endereco" class="form-control" placeholder="Endereço:" value="AV 26 DE ABRIL" />
-              <label for="endereco">Endereço:</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mb-1">
-          <div class="col-3">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="numero_quadra"
-                name="numero_quadra"
-                class="form-control"
-                placeholder="Numero. Quadra:"
-                value="1" />
-              <label>Numero. Quadra:</label>
-            </div>
-          </div>
-
-          <div class="col-3">
-            <div class="form-floating">
-              <select id="tipo_imovel" name="tipo_imovel" class="form-select">
-                <option value="" disabled>Selecione</option>
-                <option value="C">C - Comércio</option>
-                <option value="O" selected>O - Outros</option>
-                <option value="R">R - Residência</option>
-              </select>
-              <label for="tipo_imovel">Tipo de Imóvel:</label>
-            </div>
-          </div>
-
-          <div class="col-3">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="numero_imovel"
-                name="numero_imovel"
-                class="form-control"
-                placeholder="Numero. Imóvel:"
-                value="2757" />
-              <label>Numero. Imóvel:</label>
-            </div>
-          </div>
-
-          <div class="col-3">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="identificacao_armadilha"
-                name="identificacao_armadilha"
-                class="form-control"
-                placeholder="Numero. Imóvel:"
-                value="25" />
-              <label>Identificação Armadilha:</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mb-1">
-          <div class="col-12">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="localizacao"
-                name="localizacao"
-                class="form-control"
-                placeholder="Localização:"
-                value="Associação 13 de Maio" />
-              <label for="localizacao">Localização:</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mb-1">
-          <div class="col-6">
-            <div class="form-floating">
-              <input type="date" id="data" name="data" class="form-control" placeholder="Data:" value="2025-06-25" />
-              <label>Data:</label>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="form-floating">
-              <input type="time" id="hora" name="hora" class="form-control" placeholder="Hora:" value="08:00" />
-              <label>Hora:</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mb-1">
-          <div class="col-4">
-            <div class="form-floating">
-              <input
-                type="number"
-                id="tubito_chave"
-                name="tubito_chave"
-                class="form-control"
-                placeholder="Tubito Chave:"
-                value="0652" />
-              <label>Tubito Chave:</label>
-            </div>
-          </div>
-
-          <div class="col-4">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="tubito_numero"
-                name="tubito_numero"
-                class="form-control"
-                placeholder="Tubito Chave:"
-                value="145" />
-              <label>Tubito Numero:</label>
-            </div>
-          </div>
-
-          <div class="col-4">
-            <div class="form-floating">
-              <select id="ocorrencia" name="ocorrencia" class="form-select">
-                <option value="" disabled selected>Selecione</option>
-                <option value="1">1 - Casa Fechada</option>
-                <option value="2">2 - Intervalo entre a última inspeção e atual maior que 7 dias</option>
-                <option value="3">3 - Arm ou palheta desaparecida / quebrada / removida</option>
-                <option value="4">4 - Armadilha seca</option>
-              </select>
-              <label for="ocorrencia">Ocorrência:</label>
-            </div>
-          </div>
-        </div>
-      </fieldset>
+      <div id="formulario"></div>
     </div>
   </body>
 </html>

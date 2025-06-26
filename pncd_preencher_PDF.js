@@ -1,98 +1,24 @@
-// 📌 Variáveis globais
 let font; // será preenchida depois
 const size = 10;
 const color = PDFLib.rgb(1, 0, 0); //red(1,0,0) green(0,1,0)  blue(0,0,1)
 
-// 🔍 Utilitário para pegar valor de um campo HTML
-const get = id => document.getElementById(id)?.value || "";
-
-// 🔠 Função para centralizar texto dentro de uma área
-//function posicaoTexto(texto, font, size, xInicio, xFim, yInicio, yFim) {
-function posicaoTexto(texto, xInicio, xFim, yInicio, yFim) {
-  const larguraTexto = font.widthOfTextAtSize(texto, size);
-  const alturaTexto = font.heightAtSize(size);
-
-  const centroX = (xInicio + xFim) / 2;
-  const centroY = (yInicio + yFim) / 2;
-
-  const xCorrigido = centroX - larguraTexto / 2;
-  const yCorrigido = centroY - alturaTexto / 2;
-
-  return { x: xCorrigido, y: yCorrigido };
-}
-
-// 📄 Função principal
-async function gerarPDF() {
-  try {
-    const pdfDoc = await carregarPDFdoInput(); // ← lê do input file
-    await preencherPDF(pdfDoc); // ← preenche os campos
-    const pdfBytes = await pdfDoc.save(); // ← salva o PDF
-
-    const blob = new Blob([pdfBytes], { type: "application/pdf" });
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank");
-  } catch (e) {
-    console.error("Erro ao gerar PDF:", e);
-    alert("Erro ao gerar PDF: " + e.message);
-  }
-}
-
-// 📥 Carrega o PDF do input do usuário
-async function carregarPDFdoInput() {
-  const fileInput = document.getElementById("pdfFile");
-  if (!fileInput.files.length) {
-    throw new Error("Nenhum arquivo PDF foi selecionado.");
-  }
-
-  const file = fileInput.files[0];
-  const arrayBuffer = await file.arrayBuffer();
-  return await PDFLib.PDFDocument.load(arrayBuffer);
-}
-
-// ✏️ Preenche os dados no PDF
-async function preencherPDF(pdfDoc) {
+async function preencherPDFPorIndice(pdfDoc, index) {
   const { StandardFonts } = PDFLib;
-  font = await pdfDoc.embedFont(StandardFonts.Helvetica); // define a fonte globalmente
+  font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
   const firstPage = pdfDoc.getPages()[0];
 
-  // Exemplo com fset1_
+  const get = id => document.getElementById(id)?.value || "";
+
+  // Campos
   const cidade = get("cidade");
   const localidade = get("localidade");
   const categ_local = get("categ_local");
   const zona = get("zona");
   const semana_epidemiologica = get("semana_epidemiologica");
   const tipo_armadilha = get("tipo_armadilha");
-  const endereco = get("endereco");
-  const numero_quadra = get("numero_quadra");
-  const tipo_imovel = get("tipo_imovel");
-  const numero_imovel = get("numero_imovel");
-  const identificacao_armadilha = get("identificacao_armadilha");
-  const localizacao = get("localizacao");
-  const data = get("data");
-  const hora = get("hora");
-  const tubito_chave = get("tubito_chave");
-  const tubito_numero = get("tubito_numero");
-  const ocorrencia = get("ocorrencia");
 
-  // const posCidade = posicaoTexto(cidade, 11, 209, 489, 506);
-  // firstPage.drawText(cidade, {
-  //   x: posCidade.x,
-  //   y: posCidade.y,
-  //   size,
-  //   font,
-  //   color,
-  // });
-
-  // const posLocalidade = posicaoTexto(localidade, 219, 460, 490, 506);
-  // firstPage.drawText(localidade, {
-  //   x: posLocalidade.x,
-  //   y: posLocalidade.y,
-  //   size,
-  //   font,
-  //   color,
-  // });
-
+  // Coordenadas e inserções (ajuste conforme layout do seu PDF)
   const posCidade = posicaoTexto(cidade, 11, 209, 489, 506);
   firstPage.drawText(cidade, { x: posCidade.x, y: posCidade.y, size, font, color });
 
@@ -110,6 +36,24 @@ async function preencherPDF(pdfDoc) {
 
   const posTipoArmadilha = posicaoTexto(tipo_armadilha, 700, 740, 490, 508);
   firstPage.drawText(tipo_armadilha, { x: posTipoArmadilha.x, y: posTipoArmadilha.y, size, font, color });
+
+  // Utilitário para pegar valor com sufixo
+  const getCampo = campo => document.getElementById(`${campo}_${index}`)?.value || "";
+
+  // Campos
+  const endereco = getCampo("endereco");
+  const numero_quadra = getCampo("numero_quadra");
+  const tipo_imovel = getCampo("tipo_imovel");
+  const numero_imovel = getCampo("numero_imovel");
+  const identificacao_armadilha = getCampo("identificacao_armadilha");
+  const localizacao = getCampo("localizacao");
+  const data = getCampo("data");
+  const hora = getCampo("hora");
+  const tubito_chave = getCampo("tubito_chave");
+  const tubito_numero = getCampo("tubito_numero");
+  const ocorrencia = getCampo("ocorrencia");
+
+  // Coordenadas e inserções (ajuste conforme layout do seu PDF)
 
   const posEndereco = posicaoTexto(endereco, 11, 180, 400, 420);
   firstPage.drawText(endereco, { x: posEndereco.x, y: posEndereco.y, size, font, color });
@@ -138,11 +82,70 @@ async function preencherPDF(pdfDoc) {
   const posTubitoChave = posicaoTexto(tubito_chave, 605, 630, 400, 420);
   firstPage.drawText(tubito_chave, { x: posTubitoChave.x, y: posTubitoChave.y, size, font, color });
 
-  const posTubitoNumero = posicaoTexto(tubito_numero, 630, 660, 400, 420);
+  const posTubitoNumero = posicaoTexto(tubito_numero, 632, 660, 400, 420);
   firstPage.drawText(tubito_numero, { x: posTubitoNumero.x, y: posTubitoNumero.y, size, font, color });
 
   const posOcorrencia = posicaoTexto(ocorrencia, 660, 685, 400, 420);
   firstPage.drawText(ocorrencia, { x: posOcorrencia.x, y: posOcorrencia.y, size, font, color });
 
   return pdfDoc;
+}
+
+async function gerarPDFComRegistro(index) {
+  const pdfDoc = await carregarPDFdoInput();
+  await preencherPDFPorIndice(pdfDoc, index);
+  const pdfBytes = await pdfDoc.save();
+  const blob = new Blob([pdfBytes], { type: "application/pdf" });
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+}
+
+// 📥 Carrega o PDF do input do usuário
+async function carregarPDFdoInput() {
+  const fileInput = document.getElementById("pdfFile");
+  if (!fileInput.files.length) {
+    throw new Error("Nenhum arquivo PDF foi selecionado.");
+  }
+
+  const file = fileInput.files[0];
+  const arrayBuffer = await file.arrayBuffer();
+  return await PDFLib.PDFDocument.load(arrayBuffer);
+}
+
+function posicaoTexto(texto, xInicio, xFim, yInicio, yFim) {
+  const larguraTexto = font.widthOfTextAtSize(texto, size);
+  const alturaTexto = font.heightAtSize(size);
+
+  const centroX = (xInicio + xFim) / 2;
+  const centroY = (yInicio + yFim) / 2;
+
+  const xCorrigido = centroX - larguraTexto / 2;
+  const yCorrigido = centroY - alturaTexto / 2;
+
+  return { x: xCorrigido, y: yCorrigido };
+}
+
+async function gerarPDF() {
+  const total = document.querySelectorAll("fieldset[id^='fset2_']").length;
+  const registrosPorPDF = 14;
+  const totalPDFs = Math.ceil(total / registrosPorPDF);
+
+  for (let i = 0; i < totalPDFs; i++) {
+    const inicio = i * registrosPorPDF;
+    const fim = Math.min(inicio + registrosPorPDF, total);
+
+    const pdfDoc = await carregarPDFdoInput();
+    const firstPage = pdfDoc.getPages()[0];
+    const { StandardFonts } = PDFLib;
+    font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+    for (let j = inicio; j < fim; j++) {
+      await preencherPDFPorIndice(pdfDoc, j, j % registrosPorPDF); // novo índice de posição
+    }
+
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+  }
 }

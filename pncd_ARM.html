@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inspeção de Armadilhas - PNCD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <style>
+      body {
+        padding: 20px;
+      }
+      fieldset {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 15px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="mb-4">Inspeção de Armadilhas - PNCD</h1>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input type="file" id="csvInput" accept=".csv" class="form-control" />
+      </div>
+      <div class="col-md-6">
+        <button onclick="carregarCSV()" class="btn btn-primary">Carregar CSV</button>
+        <button onclick="exportarCSV()" class="btn btn-success">Exportar Inspeções</button>
+      </div>
+    </div>
+
+    <div id="formulario"></div>
+
+    <script>
+      let registros = [];
+      let processados = [];
+      let indexAtual = 0;
+
+      function carregarCSV() {
+        const input = document.getElementById("csvInput");
+        const file = input.files[0];
+        if (!file) {
+          alert("Por favor, selecione um arquivo CSV.");
+          return;
+        }
+
+        Papa.parse(file, {
+          header: true,
+          skipEmptyLines: true,
+          complete: function (results) {
+            registros = results.data;
+            processados = [];
+            indexAtual = 0;
+            exibirRegistroAtual();
+          },
+        });
+      }
+
+      function exibirRegistroAtual() {
+        const container = document.getElementById("formulario");
+        container.innerHTML = "";
+        if (indexAtual >= registros.length) {
+          container.innerHTML = "<p class='alert alert-info'>Todas as armadilhas foram preenchidas.</p>";
+          return;
+        }
+
+        const agora = new Date();
+        const dataAtual = agora.toISOString().split("T")[0]; // yyyy-mm-dd
+        const horaAtual = agora.toTimeString().split(":").slice(0, 2).join(":"); // hh:mm
+
+        const linha = registros[indexAtual];
+
+        // Usar valor do CSV ou data/hora atual como fallback
+        const valorData = linha.data || dataAtual;
+        const valorHora = linha.hora || horaAtual;
+
+        const bloco = `
+        <fieldset>
+          <legend>Registro ${indexAtual + 1}</legend>
+
+          <div class="row mb-2">
+            <div class="col-md-12">
+              <label class="form-label">Endereço</label>
+              <input type="text" id="endereco" value="${linha.endereco || ""}" class="form-control">
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-md-4">
+              <label class="form-label">Número Quadra</label>
+              <input type="text" id="numero_quadra" value="${linha.numero_quadra || ""}" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tipo de Imóvel</label>
+              <select id="tipo_imovel" class="form-select">
+                <option value="C" ${linha.tipo_imovel === "C" ? "selected" : ""}>C - Comércio</option>
+                <option value="O" ${linha.tipo_imovel === "O" ? "selected" : ""}>O - Outros</option>
+                <option value="R" ${linha.tipo_imovel === "R" ? "selected" : ""}>R - Residência</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Número Imóvel</label>
+              <input type="text" id="numero_imovel" value="${linha.numero_imovel || ""}" class="form-control">
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <label class="form-label">Identificação Armadilha</label>
+              <input type="text" id="identificacao_armadilha" value="${
+                linha.identificacao_armadilha || ""
+              }" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Localização</label>
+              <input type="text" id="localizacao" value="${linha.localizacao || ""}" class="form-control">
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <label class="form-label">Data</label>
+              <input type="date" id="data" value="${valorData}" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Hora</label>
+              <input type="time" id="hora" value="${valorHora}" class="form-control">
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-md-4">
+              <label class="form-label">Tubito Chave</label>
+              <input type="text" id="tubito_chave" value="${linha.tubito_chave || ""}" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tubito Número</label>
+              <input type="text" id="tubito_numero" value="${linha.tubito_numero || ""}" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tubito Quatidade</label>
+              <input type="text" id="tubito_quantidade" value="${linha.tubito_quantidade || ""}" class="form-control">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label class="form-label">Ocorrência</label>
+              <select id="ocorrencia" class="form-select">
+                <option value="" disabled ${linha.ocorrencia === "" ? "selected" : ""}>Selecione</option>
+                <option value="1" ${linha.ocorrencia === "1" ? "selected" : ""}>1 - Casa Fechada</option>
+                <option value="2" ${linha.ocorrencia === "2" ? "selected" : ""}>2 - Intervalo > 7 dias</option>
+                <option value="3" ${linha.ocorrencia === "3" ? "selected" : ""}>3 - Armadilha removida</option>
+                <option value="4" ${linha.ocorrencia === "4" ? "selected" : ""}>4 - Armadilha seca</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn btn-success" onclick="salvarAtual()">Salvar e Próximo</button>
+        </fieldset>`;
+
+        container.innerHTML = bloco;
+      }
+
+      function salvarAtual() {
+        const dados = {
+          ...registros[indexAtual],
+          data: document.getElementById("data").value,
+          hora: document.getElementById("hora").value,
+          tubito_chave: document.getElementById("tubito_chave").value,
+          tubito_numero: document.getElementById("tubito_numero").value,
+          tubito_quantidade: document.getElementById("tubito_quantidade").value,
+          ocorrencia: document.getElementById("ocorrencia").value,
+        };
+
+        processados.push(dados);
+        registros.splice(indexAtual, 1);
+        exibirRegistroAtual();
+      }
+
+      function exportarCSV() {
+        if (processados.length === 0) {
+          alert("Nenhum registro preenchido ainda.");
+          return;
+        }
+
+        const agora = new Date();
+        const pad = n => String(n).padStart(2, "0");
+        const dataHora = `${agora.getFullYear()}-${pad(agora.getMonth() + 1)}-${pad(agora.getDate())}_${pad(
+          agora.getHours()
+        )}-${pad(agora.getMinutes())}-${pad(agora.getSeconds())}`;
+
+        const csv = Papa.unparse(processados);
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `inspecoes_preenchidas_${dataHora}.csv`;
+        link.click();
+      }
+    </script>
+  </body>
+</html>

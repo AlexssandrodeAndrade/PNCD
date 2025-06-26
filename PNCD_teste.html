@@ -27,3 +27,141 @@
     </div>
   </body>
 </html>
+
+<fieldset id="fset2">
+  <legend></legend>
+
+  <div class="row mb-1">
+    <div class="col-12">
+      <div class="form-floating">
+        <input type="text" id="endereco" class="form-control" placeholder="Endereço:" value="AV 26 DE ABRIL" />
+        <label for="endereco">Endereço:</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-1">
+    <div class="col-3">
+      <div class="form-floating">
+        <input
+          type="text"
+          id="numero_quadra"
+          name="numero_quadra"
+          class="form-control"
+          placeholder="Numero. Quadra:"
+          value="1" />
+        <label>Numero. Quadra:</label>
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="form-floating">
+        <select id="tipo_imovel" name="tipo_imovel" class="form-select">
+          <option value="" disabled>Selecione</option>
+          <option value="C">C - Comércio</option>
+          <option value="O" selected>O - Outros</option>
+          <option value="R">R - Residência</option>
+        </select>
+        <label for="tipo_imovel">Tipo de Imóvel:</label>
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="form-floating">
+        <input
+          type="text"
+          id="numero_imovel"
+          name="numero_imovel"
+          class="form-control"
+          placeholder="Numero. Imóvel:"
+          value="2757" />
+        <label>Numero. Imóvel:</label>
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="form-floating">
+        <input
+          type="text"
+          id="identificacao_armadilha"
+          name="identificacao_armadilha"
+          class="form-control"
+          placeholder="Numero. Imóvel:"
+          value="25" />
+        <label>Identificação Armadilha:</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-1">
+    <div class="col-12">
+      <div class="form-floating">
+        <input
+          type="text"
+          id="localizacao"
+          name="localizacao"
+          class="form-control"
+          placeholder="Localização:"
+          value="Associação 13 de Maio" />
+        <label for="localizacao">Localização:</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-1">
+    <div class="col-6">
+      <div class="form-floating">
+        <input type="date" id="data" name="data" class="form-control" placeholder="Data:" value="2025-06-25" />
+        <label>Data:</label>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-floating">
+        <input type="time" id="hora" name="hora" class="form-control" placeholder="Hora:" value="08:00" />
+        <label>Hora:</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-1">
+    <div class="col-4">
+      <div class="form-floating">
+        <input
+          type="number"
+          id="tubito_chave"
+          name="tubito_chave"
+          class="form-control"
+          placeholder="Tubito Chave:"
+          value="0652" />
+        <label>Tubito Chave:</label>
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="form-floating">
+        <input
+          type="text"
+          id="tubito_numero"
+          name="tubito_numero"
+          class="form-control"
+          placeholder="Tubito Chave:"
+          value="145" />
+        <label>Tubito Numero:</label>
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="form-floating">
+        <select id="ocorrencia" name="ocorrencia" class="form-select">
+          <option value="" disabled selected>Selecione</option>
+          <option value="1">1 - Casa Fechada</option>
+          <option value="2">2 - Intervalo entre a última inspeção e atual maior que 7 dias</option>
+          <option value="3">3 - Arm ou palheta desaparecida / quebrada / removida</option>
+          <option value="4">4 - Armadilha seca</option>
+        </select>
+        <label for="ocorrencia">Ocorrência:</label>
+      </div>
+    </div>
+  </div>
+</fieldset>
