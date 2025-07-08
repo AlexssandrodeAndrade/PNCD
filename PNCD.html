@@ -4,121 +4,55 @@
     <meta charset="UTF-8" />
     <title>Formulário PNCD</title>
     <link href="bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="pncd.css" rel="stylesheet" />
     <script src="bootstrap/bootstrap.bundle.min.js"></script>
     <script src="pdf-lib/pdf-lib.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-    <link href="pncd.css" rel="stylesheet" />
     <script src="pncd_carregar_csv.js"></script>
+    <script src="pncd_carregar_json.js"></script>
     <script src="pncd_gera_pdf.js"></script>
   </head>
   <body>
     <div class="container mb-3">
       <h2 class="text-center">Formulário PNCD com PDF local</h2>
 
-      <div class="row m-2 p-2">
-        <div class="col-6">
-          <div class="form-floating">
-            <input type="file" id="csvFile" class="form-control" placeholder="CSV Modelo:" accept=".csv" />
-            <label for="csvFile">CSV Modelo:</label>
+      <div>
+        <div class="row mb-2">
+          <div class="col-6">
+            <div class="form-floating">
+              <input type="file" id="csvFile" class="form-control" placeholder="CSV Modelo:" accept=".csv" />
+              <label for="csvFile">CSV Modelo:</label>
+            </div>
+          </div>
+          <div class="col-6">
+            <button class="btn btn-secondary" onclick="carregar_CSV()">Carregar CSV</button>
           </div>
         </div>
-        <div class="col-6">
-          <button class="btn btn-secondary" onclick="carregar_HTML()">Gerar HTML Preenchido</button>
+
+        <div class="row mb-2">
+          <div class="col-6">
+            <div class="form-floating">
+              <input type="file" id="jsonFile" accept=".json" class="form-control" />
+              <label for="jsonFile">Json Modelo:</label>
+            </div>
+          </div>
+          <div class="col-6">
+            <button onclick="carregar_JSON()" class="btn btn-primary">Carregar JSON</button>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-6">
+            <div class="form-floating">
+              <input type="file" id="pdfFile" class="form-control" placeholder="PDF Modelo:" accept=".pdf" />
+              <label for="pdfFile">PDF Modelo:</label>
+            </div>
+          </div>
+          <div class="col-6">
+            <button class="btn btn-success" onclick="gerar_PDF()">Gerar PDF Preenchido</button>
+          </div>
         </div>
       </div>
-
-      <div class="row m-2 p-2">
-        <div class="col-6">
-          <div class="form-floating">
-            <input type="file" id="pdfFile" class="form-control" placeholder="PDF Modelo:" accept=".pdf" />
-            <label for="pdfFile">PDF Modelo:</label>
-          </div>
-        </div>
-        <!-- <div class="col-3">
-          <button class="btn btn-secondary" onclick="gerarPDFComRegistro(0)">Gerar PDF Preenchido</button>
-        </div> -->
-        <div class="col-6">
-          <button class="btn btn-success" onclick="gerar_PDF()">Gerar PDF Preenchido</button>
-        </div>
-      </div>
-
-      <fieldset id="fset1">
-        <legend></legend>
-
-        <div class="row mb-1">
-          <div class="col-4">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="cidade"
-                name="cidade"
-                class="form-control"
-                placeholder="Municipio:"
-                value="JOSE BOITEUX" />
-              <label>Municipio:</label>
-            </div>
-          </div>
-
-          <div class="col-4">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="localidade"
-                name="localidade"
-                class="form-control"
-                placeholder="Código e nome da localidade:"
-                value="CENTRO" />
-              <label>Código e nome da localidade:</label>
-            </div>
-          </div>
-
-          <div class="col-4">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="categ_local"
-                name="categ_local"
-                class="form-control"
-                placeholder="Categ. Local:"
-                value="UBR" />
-              <label>Categ. Local:</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mb-1">
-          <div class="col-4">
-            <div class="form-floating">
-              <input type="text" id="zona" name="zona" class="form-control" placeholder="Zona:" value="URB" />
-              <label>Zona:</label>
-            </div>
-          </div>
-
-          <div class="col-4">
-            <div class="form-floating">
-              <input
-                type="text"
-                id="semana_epidemiologica"
-                name="semana_epidemiologica"
-                class="form-control"
-                placeholder="Semana Epidemiologica:"
-                value="1" />
-              <label>Semana Epidemiologica:</label>
-            </div>
-          </div>
-
-          <div class="col-4">
-            <div class="form-floating">
-              <select id="tipo_armadilha" class="form-select">
-                <option value="" disabled selected>Selecione</option>
-                <option value="1">1 - Ovitramapa</option>
-                <option value="2" selected>2 - Larvitramapa</option>
-              </select>
-              <label>Tipo de Armadilha:</label>
-            </div>
-          </div>
-        </div>
-      </fieldset>
 
       <div id="formulario"></div>
     </div>

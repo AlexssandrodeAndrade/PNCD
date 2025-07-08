@@ -1,0 +1,25 @@
+﻿rota;endereco;numero_quadra;tipo_imovel;numero_imovel;identificacao_armadilha;localizacao;hora;data;tubito_chave;tubito_numero;tubito_quantidade;ocorrencia
+1;Rua 13 de Maio;46;C;2757;25;Associação 13 de Maio;;;;;;
+2;Rua 13 de Maio;43;C;1900;24;Madereira Rozene Rossini;;;;;;
+3;Rua 13 de Maio;36;C;709;23;Nativa Textil, no porão;;;;;;
+4;9 de Dezembro;24;R;1520;22;lado de traz do imovel;;;;;;
+5;Rua 26 de Julho;27;O;1778;3;C. M. de Eventos Independente;;;;;;
+6;Rua 26 de Julho;27;C;S/N;21;Oficina Weidmann;;;;;;
+7;Avenida 26 de Abril;37;C;70;20;Lanchonete Aurora, depósito;;;;;;
+8;Rua 20 de Janeiro;22;R;134;19;Rancho de Lenha, Fundo da Rua;;;;;;
+9;Avenida 26 de Abril;11;C;100;18;SICOOB;;;;;;
+11;Rua 15 de Novembro;16;C;74;17;Depósito de Madeira Bagattoli;;;;;;
+10;Avenida 26 de Abril;17;C;144;16;Comercial Oliveira, na garagem;;;;;;
+12;Rua 22 de Abril;15;R;115;15;Lado da garagem ;;;;;;
+13;Avenida 26 de Abril;15;C;48;14;Cravil, atrás;;;;;;
+14;Avenida 26 de Abril;8;C;219;13;Posto São Sebastião, atrás;;;;;;
+15;Rua 16 de Julho;15;C;248;12;Mercado Vendrami, no depósito;;;;;;
+16;Avenida 26 de Abril;7;R;398;11;Loja Isolete, atrás;;;;;;
+17;Avenida 26 de Abril;7;C;488;9;Conservas Alveira, garagem;;;;;;
+18;Avenida 26 de Abril;7;R;688;8;Rancho Vicentin;;;;;;
+19;Avenida 26 de Abril;8;C;870;7;Malharia Ivolinda, garagem;;;;;;
+20;Avenida 26 de Abril;8;C;1140;6;Garagem Tolfo;;;;;;
+21;Avenida 26 de Abril;3;C;1387;5;Posto JB, atrás do posto;;;;;;
+22;Avenida 26 de Abril;8;C;1690;4;Madereiras Otávio, na garagem;;;;;;
+23;Avenida 26 de Abril;5;R;103;1;Casa entrada ponte, atrás ;;;;;;
+24;Rua 20 de Julho;14;O;410;10;Posto de Saúde, atrás depósito;;;;;;

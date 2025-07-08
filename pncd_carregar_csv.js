@@ -1,5 +1,5 @@
 // document.getElementById("csvInput").addEventListener("change", function (e) {
-async function carregar_HTML() {
+async function carregar_CSV() {
   const input = document.getElementById("csvFile");
   const file = input.files[0];
   if (!file) {

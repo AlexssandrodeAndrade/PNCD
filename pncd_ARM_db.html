@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inspeção de Armadilhas - PNCD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.4/dist/dexie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#0d6efd" />
+    <style>
+      body {
+        padding: 20px;
+      }
+      fieldset {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 15px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="mb-4">Inspeção de Armadilhas - PNCD</h1>
+
+    <div class="mb-3">
+      <input type="file" id="csvBase" accept=".csv" class="form-control" />
+      <button onclick="importarCSVBase()" class="btn btn-secondary mt-1">Importar Dados Base</button>
+    </div>
+
+    <div class="mb-3">
+      <button onclick="mostrarFormularioInspecao()" class="btn btn-info">Nova Inspeção</button>
+      <button onclick="iniciarInspecao()" class="btn btn-primary">Iniciar Inspeção</button>
+      <button onclick="exportarPorInspecao()" class="btn btn-success">Exportar Inspeção Atual</button>
+    </div>
+
+    <div id="formulario"></div>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("service-worker.js")
+          .then(() => console.log("Service Worker registrado com sucesso!"))
+          .catch(err => console.error("Erro ao registrar o Service Worker:", err));
+      }
+
+      const db = new Dexie("PNCDInspecao");
+      db.version(1).stores({
+        armadilhas: "++id,rota,endereco,numero_quadra,tipo_imovel,numero_imovel,identificacao_armadilha,localizacao",
+        inspecoes: "++id,cidade,localidade,categ_local,zona,semana_epidemiologica,tipo_armadilha,data",
+        inspecoes_armadilhas:
+          "++id,inspecao_id,armadilha_id,data,hora,tubito_chave,tubito_numero,tubito_quantidade,ocorrencia",
+      });
+
+      let inspecaoAtualId = null;
+      let baseRegistros = [];
+      let indexAtual = 0;
+
+      function mostrarFormularioInspecao() {
+        const container = document.getElementById("formulario");
+        container.innerHTML = `
+        <fieldset>
+          <legend>Nova Inspeção</legend>
+          <div class="row mb-2">
+            <div class="col-md-4">
+              <label class="form-label">Cidade</label>
+              <input type="text" id="cidade" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Localidade</label>
+              <input type="text" id="localidade" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Categoria Local</label>
+              <input type="text" id="categ_local" class="form-control">
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-md-4">
+              <label class="form-label">Zona</label>
+              <input type="text" id="zona" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Semana Epidemiológica</label>
+              <input type="text" id="semana_epidemiologica" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tipo de Armadilha</label>
+              <input type="text" id="tipo_armadilha" class="form-control">
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-md-4">
+              <label class="form-label">Data da Inspeção</label>
+              <input type="date" id="data_inspecao" class="form-control">
+            </div>
+          </div>
+
+          <button onclick="salvarInspecaoGeral()" class="btn btn-success">Salvar Inspeção</button>
+        </fieldset>`;
+      }
+
+      async function salvarInspecaoGeral() {
+        const inspecao = {
+          cidade: document.getElementById("cidade").value,
+          localidade: document.getElementById("localidade").value,
+          categ_local: document.getElementById("categ_local").value,
+          zona: document.getElementById("zona").value,
+          semana_epidemiologica: document.getElementById("semana_epidemiologica").value,
+          tipo_armadilha: document.getElementById("tipo_armadilha").value,
+          data: document.getElementById("data_inspecao").value,
+        };
+        inspecaoAtualId = await db.inspecoes.add(inspecao);
+        alert("Inspeção criada com sucesso!");
+        iniciarInspecao();
+      }
+
+      async function exportarPorInspecao() {
+        if (!inspecaoAtualId) {
+          alert("Nenhuma inspeção ativa.");
+          return;
+        }
+
+        const registros = await db.inspecoes_armadilhas.where("inspecao_id").equals(inspecaoAtualId).toArray();
+        const base = await db.armadilhas.toArray();
+
+        const dadosCompletos = registros.map(reg => {
+          const armadilha = base.find(a => a.id === reg.armadilha_id) || {};
+          return {
+            rota: armadilha.rota || "",
+            endereco: armadilha.endereco || "",
+            numero_quadra: armadilha.numero_quadra || "",
+            tipo_imovel: armadilha.tipo_imovel || "",
+            numero_imovel: armadilha.numero_imovel || "",
+            identificacao_armadilha: armadilha.identificacao_armadilha || "",
+            localizacao: armadilha.localizacao || "",
+            hora: reg.hora || "",
+            data: reg.data || "",
+            tubito_chave: reg.tubito_chave || "",
+            tubito_numero: reg.tubito_numero || "",
+            ocorrencia: reg.ocorrencia || "",
+          };
+        });
+
+        const csv = Papa.unparse(dadosCompletos, { delimiter: ";" });
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `inspecao_${inspecaoAtualId}.csv`;
+        link.click();
+      }
+
+      async function importarCSVBase() {
+        const file = document.getElementById("csvBase").files[0];
+        if (!file) return alert("Selecione um arquivo CSV.");
+
+        Papa.parse(file, {
+          header: true,
+          skipEmptyLines: true,
+          complete: async results => {
+            const dados = results.data.map(row => ({
+              rota: row.rota,
+              endereco: row.endereco,
+              numero_quadra: row.numero_quadra,
+              tipo_imovel: row.tipo_imovel,
+              numero_imovel: row.numero_imovel,
+              identificacao_armadilha: row.identificacao_armadilha,
+              localizacao: row.localizacao,
+            }));
+
+            await db.armadilhas.clear();
+            await db.armadilhas.bulkAdd(dados);
+
+            alert("Base importada com sucesso!");
+          },
+        });
+      }
+
+      async function iniciarInspecao() {
+        baseRegistros = await db.armadilhas.toArray();
+        indexAtual = 0;
+        exibirRegistroAtual();
+      }
+
+      function exibirRegistroAtual() {
+        const base = baseRegistros[indexAtual];
+        const container = document.getElementById("formulario");
+        container.innerHTML = "";
+
+        if (!base) {
+          container.innerHTML = `<p class='alert alert-info'>Todos os registros foram inspecionados.</p>`;
+          return;
+        }
+
+        const agora = new Date();
+        const dataAtual = agora.toISOString().split("T")[0];
+        const horaAtual = agora.toTimeString().split(":").slice(0, 2).join(":");
+
+        container.innerHTML = `
+      <fieldset>
+        <legend>Inspeção - ${base.endereco}</legend>
+        <p><strong>Identificação:</strong> ${base.identificacao_armadilha}</p>
+        <p><strong>Localização:</strong> ${base.localizacao}</p>
+
+        <div class="row mb-2">
+          <div class="col-md-6">
+            <label class="form-label">Data</label>
+            <input type="date" id="data" value="${dataAtual}" class="form-control">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Hora</label>
+            <input type="time" id="hora" value="${horaAtual}" class="form-control">
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-md-4">
+            <label class="form-label">Tubito Chave</label>
+            <input type="text" id="tubito_chave" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Tubito Número</label>
+            <input type="text" id="tubito_numero" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Tubito Quantidade</label>
+            <input type="text" id="tubito_quantidade" class="form-control">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <label class="form-label">Ocorrência</label>
+            <select id="ocorrencia" class="form-select">
+              <option value="">Selecione</option>
+              <option value="1">1 - Casa Fechada</option>
+              <option value="2">2 - Intervalo > 7 dias</option>
+              <option value="3">3 - Armadilha removida</option>
+              <option value="4">4 - Armadilha seca</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-success" onclick="salvarInspecao()">Salvar e Próximo</button>
+      </fieldset>`;
+      }
+
+      async function salvarInspecao() {
+        const dados = {
+          inspecao_id: inspecaoAtualId,
+          armadilha_id: baseRegistros[indexAtual].id,
+          data: document.getElementById("data").value,
+          hora: document.getElementById("hora").value,
+          tubito_chave: document.getElementById("tubito_chave").value,
+          tubito_numero: document.getElementById("tubito_numero").value,
+          tubito_quantidade: document.getElementById("tubito_quantidade").value,
+          ocorrencia: document.getElementById("ocorrencia").value,
+        };
+
+        await db.inspecoes_armadilhas.add(dados);
+        indexAtual++;
+        exibirRegistroAtual();
+      }
+
+      async function exportarCSV() {
+        const registros = await db.inspecoes_armadilhas.toArray();
+        const base = await db.armadilhas.toArray();
+
+        const dadosCompletos = registros.map(reg => {
+          const armadilha = base.find(a => a.id === reg.armadilha_id) || {};
+          return {
+            rota: armadilha.rota || "",
+            endereco: armadilha.endereco || "",
+            numero_quadra: armadilha.numero_quadra || "",
+            tipo_imovel: armadilha.tipo_imovel || "",
+            numero_imovel: armadilha.numero_imovel || "",
+            identificacao_armadilha: armadilha.identificacao_armadilha || "",
+            localizacao: armadilha.localizacao || "",
+            hora: reg.hora || "",
+            data: reg.data || "",
+            tubito_chave: reg.tubito_chave || "",
+            tubito_numero: reg.tubito_numero || "",
+            ocorrencia: reg.ocorrencia || "",
+          };
+        });
+
+        const csv = Papa.unparse(dadosCompletos, { delimiter: ";" });
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `inspecoes_exportadas.csv`;
+        link.click();
+      }
+    </script>
+  </body>
+</html>
